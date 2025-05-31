@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './TestimonialForm.css';
+const apiUrl = import.meta.env.VITE_API_URL;
 
-const API_URL = "http://localhost:5002/api/testimonials"; // <-- use your backend port
+const API_URL = `${apiUrl}/api/testimonials`; // <-- use your backend port
 
 export default function TestimonialForm() {
   const [form, setForm] = useState({

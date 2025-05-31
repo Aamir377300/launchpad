@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import './OpportunitiesSection.css';
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const OpportunityCard = ({ opportunity, onApply }) => (
   <div className={`opportunity-card ${opportunity.isFeatured ? 'featured' : ''}`}>
@@ -110,7 +111,7 @@ const OpportunitiesSection = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:5002/api/opportunities')
+    fetch(`${apiUrl}/api/opportunities`)
       .then(res => res.json())
       .then(setOpportunities)
       .catch(() => setOpportunities([]));
@@ -149,7 +150,7 @@ const OpportunitiesSection = () => {
       return;
     }
     try {
-      const res = await fetch("http://localhost:5002/api/apply", {
+      const res = await fetch(`${apiUrl}/api/apply`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

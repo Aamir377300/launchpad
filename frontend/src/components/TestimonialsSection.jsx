@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const TestimonialsSection = () => {
   const [testimonials, setTestimonials] = useState([]);
@@ -10,7 +11,7 @@ const TestimonialsSection = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5002/api/testimonials")
+    fetch(`${apiUrl}/api/testimonials`)
       .then(res => res.json())
       .then(setTestimonials)
       .catch(() => setTestimonials([]));

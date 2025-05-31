@@ -11,12 +11,13 @@ const Navbar = ({ toggleSidebar }) => {
   const [user, setUser] = useState(null);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   // Fetch user info if token exists
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
-    fetch("http://localhost:5002/api/auth/me", {
+    fetch(`${apiUrl}/api/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import * as LucideIcons from "lucide-react";
 import "./CareerResources.css";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function CareerResources() {
   const { id } = useParams();
@@ -10,7 +11,7 @@ export default function CareerResources() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:5002/api/resources/${id}`)
+    fetch(`${apiUrl}/api/resources/${id}`)
       .then(res => res.ok ? res.json() : null)
       .then(setResource)
       .catch(() => setResource(null))

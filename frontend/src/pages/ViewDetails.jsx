@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Calendar, Clock, MapPin } from "lucide-react";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function ViewDetails() {
   const { id } = useParams();
@@ -9,7 +10,7 @@ export default function ViewDetails() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:5002/api/trendingevents/${id}`)
+    fetch(`${apiUrl}/api/trendingevents/${id}`)
       .then(res => res.ok ? res.json() : null)
       .then(setEvent)
       .catch(() => setEvent(null))

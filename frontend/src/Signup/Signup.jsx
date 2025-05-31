@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import "./Signup.css"; // Optional: your CSS file for styling
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function Signup() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ function Signup() {
 
     try {
       const apiObj = { name, email, password, phone };
-      await axios.post("http://localhost:5002/api/auth/signup", apiObj);
+      await axios.post(`${apiUrl}/api/auth/signup`, apiObj);
 
       alert("Signup complete ✅");
       navigate("/login");

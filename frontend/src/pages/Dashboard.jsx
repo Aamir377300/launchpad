@@ -3,6 +3,7 @@ import { FaGithub, FaLinkedin, FaPlus } from "react-icons/fa";
 import { MapPin } from "lucide-react";
 import "./Dashboard.css";
 import Navbar from "../components/Navbar";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const SKILL_OPTIONS = [
   "React",
@@ -41,7 +42,7 @@ export default function Dashboard() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
-    fetch("http://localhost:5002/api/profile", {
+    fetch(`${apiUrl}/api/profile`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -80,7 +81,7 @@ export default function Dashboard() {
     e.preventDefault();
     setLoading(true);
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:5002/api/profile", {
+    const res = await fetch(`${apiUrl}/api/profile`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -98,7 +99,7 @@ export default function Dashboard() {
   const handleAddCertUrl = async () => {
     if (!certForm.name.trim() || !certForm.url.trim()) return;
     const token = localStorage.getItem("token");
-    await fetch("http://localhost:5002/api/profile/certificate-url", {
+    await fetch(`${apiUrl}/api/profile/certificate-url`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -117,7 +118,7 @@ export default function Dashboard() {
   // Remove certificate (by url)
   const handleRemoveCert = async (url) => {
     const token = localStorage.getItem("token");
-    await fetch("http://localhost:5002/api/profile/certificate-url", {
+    await fetch(`${apiUrl}/api/profile/certificate-url`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -135,7 +136,7 @@ export default function Dashboard() {
   const handleSetResumeUrl = async () => {
     if (!resumeUrl.trim()) return;
     const token = localStorage.getItem("token");
-    await fetch("http://localhost:5002/api/profile/resume-url", {
+    await fetch(`${apiUrl}/api/profile/resume-url`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -168,7 +169,7 @@ export default function Dashboard() {
     e.preventDefault();
     setLoading(true);
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:5002/api/profile", {
+    const res = await fetch(`${apiUrl}/api/profile`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

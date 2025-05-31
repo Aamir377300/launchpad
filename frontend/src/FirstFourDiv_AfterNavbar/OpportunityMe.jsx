@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { MapPin, TrendingUp } from "lucide-react";
 import "./OpportunityMe.css";
+const apiUrl = import.meta.env.VITE_API_URL;
+
 
 export default function OpportunityMe() {
   const { id } = useParams();
@@ -10,7 +12,7 @@ export default function OpportunityMe() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:5002/api/opportunities/${id}`)
+    fetch(`${apiUrl}/api/opportunities/${id}`)
       .then(res => res.ok ? res.json() : null)
       .then(setOpportunity)
       .catch(() => setOpportunity(null))

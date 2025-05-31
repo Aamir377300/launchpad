@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import "./MainPage.css";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function Mainpage() {
   const [stats, setStats] = useState({
@@ -28,7 +29,7 @@ function Mainpage() {
   // Fetch events from backend
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   useEffect(() => {
-    fetch("http://localhost:5002/api/events")
+    fetch(`${apiUrl}/api/events`)
       .then((res) => res.json())
       .then(setUpcomingEvents)
       .catch(() => setUpcomingEvents([]));
@@ -37,7 +38,7 @@ function Mainpage() {
   // Fetch resources from backend
   const [resources, setResources] = useState([]);
   useEffect(() => {
-    fetch("http://localhost:5002/api/resources")
+    fetch(`${apiUrl}/api/resources`)
       .then((res) => res.json())
       .then(setResources)
       .catch(() => setResources([]));

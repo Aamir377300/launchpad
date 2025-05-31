@@ -2,6 +2,7 @@ import { Calendar, Clock, MapPin } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const EventCard = ({ event, onRegister }) => (
   <div className="flex flex-col h-full overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl bg-white group">
@@ -56,7 +57,7 @@ const EventsSection = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5002/api/trendingevents")
+    fetch(`${apiUrl}/api/trendingevents`)
       .then((res) => res.json())
       .then(setEvents)
       .catch(() => setEvents([]));
@@ -71,7 +72,7 @@ const EventsSection = () => {
       return;
     }
     try {
-      const res = await fetch("http://localhost:5002/api/event-register", {
+      const res = await fetch(`${apiUrl}/api/event-register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

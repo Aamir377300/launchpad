@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.css"; // Optional: for your custom styles
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function Login() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ function Login() {
 
     try {
       const apiObj = { email, password };
-      const res = await axios.post("http://localhost:5002/api/auth/login", apiObj);
+      const res = await axios.post(`${apiUrl}/api/auth/login`, data);
 
       const token = res.data.token;
       if (token) {
