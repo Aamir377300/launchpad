@@ -15,22 +15,22 @@ function Login() {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage("");
-
+  
     if (!email || !password) {
       setErrorMessage("Please fill all fields");
       setIsLoading(false);
       return;
     }
-
+  
     try {
       const apiObj = { email, password };
-      const res = await axios.post(`${apiUrl}/api/auth/login`, data);
-
+      const res = await axios.post(`${apiUrl}/api/auth/login`, apiObj); // ✅ Fixed here
+  
       const token = res.data.token;
       if (token) {
         localStorage.setItem("token", token);
         alert("Login Successful ✅");
-        navigate("/mainpage"); // <-- Navigate to main page after login
+        navigate("/mainpage");
       }
     } catch (err) {
       console.error("Login error:", err);
@@ -43,6 +43,7 @@ function Login() {
       setIsLoading(false);
     }
   }
+  
 
   return (
     <div className="login-container">
