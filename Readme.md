@@ -3,7 +3,7 @@
 A full-stack web application for student onboarding, authentication, and test management built with **React + Vite** (frontend) and **Express + MongoDB** (backend).
 
 🌐 **Live Deployment:**  
-[Launchpad on Vercel](https://vercel.com/aamir-khans-projects-03a08131/launchpad_working)
+[Launchpad on Vercel](https://launchpadworking.vercel.app/mainpage)
 
 ---
 
