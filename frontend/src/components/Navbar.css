@@ -269,8 +269,8 @@
 
 .dropdown-menu {
   position: absolute;
-  right: -150px;
-  top: 44px; /* closer to the avatar */
+  right: -20px;
+  top: 63px; /* closer to the avatar */
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 18px rgba(31,38,135,0.13);

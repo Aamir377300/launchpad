@@ -39,25 +39,21 @@ const Footer_last = () => {
             <h3 className="footer-heading">Platform</h3>
             <ul className="footer-links-list">
               <li className="footer-link-item">
-                <a href="#" className="footer-link">
+                <a href="/dashboard" className="footer-link">
                   Dashboard
                 </a>
               </li>
               <li className="footer-link-item">
-                <a href="#" className="footer-link">
+                <a href="#events" className="footer-link">
                   Events
                 </a>
               </li>
               <li className="footer-link-item">
-                <a href="#" className="footer-link">
+                <a href="#opportunities-container" className="footer-link">
                   Opportunities
                 </a>
               </li>
-              <li className="footer-link-item">
-                <a href="#" className="footer-link">
-                  Skills Assessment
-                </a>
-              </li>
+              
             </ul>
           </div>
 
