@@ -115,17 +115,15 @@ project/
 
 ---
 
-## 🚀 Deployment
+.env file
+🔴 **Run the frontend dev server**  
+   ```bash
+   VITE_API_URL = https://launchpad-2.onrender.com
+   ```
 
-### 🟢 Frontend on Netlify
+---
 
-- Go to [Netlify](https://netlify.com)
-- Connect to your GitHub repository
-- **Build command**: `npm run build`  
-- **Publish directory**: `dist` (for Vite)
-- Set environment variables (if any)
-
-👉 [Live site](https://683795d5918567cb7d1881d2--melodic-beijinho-9bdd10.netlify.app/mainpage)
+👉 [Live site](https://launchpad-6m3x.vercel.app/mainpage)
 
 ---
 
@@ -133,4 +131,3 @@ project/
 - Aamir Khan 
 - Abhishek Kumar Chauhan  
 -Devansh Verma  
-(And other awesome team members 🚀)
