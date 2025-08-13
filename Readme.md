@@ -115,8 +115,7 @@ project/
 
 ---
 
-.env file
-🔴 **Run the frontend dev server**  
+🔴 .env file **Run the frontend dev server**  
    ```bash
    VITE_API_URL = https://launchpad-2.onrender.com
    ```
