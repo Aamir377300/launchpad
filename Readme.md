@@ -24,7 +24,7 @@ project/
 - Student Dashboard
 - Test instructions page
 - MongoDB backend with JWT authentication
-- Deployment-ready on Netlify
+- Deployment-ready on Vercel
 
 ---
 
@@ -50,7 +50,7 @@ project/
 4. **Setup `.env` file**  
    Create a `.env` file inside `/backend`:
    ```
-   MONGO_URI=mongodb+srv://belalaamirkhan:baZ3nUTBMmAvBNlj@cluster0.1sco7s6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+   MONGO_URI=your mongodb string
    JWT_SECRET=mystrongsecretkey123
    PORT=5002
 
