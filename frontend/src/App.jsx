@@ -8,7 +8,7 @@ import MainPage from './FirstFourDiv_AfterNavbar/Mainpage';
 import OpportunityMe from './FirstFourDiv_AfterNavbar/OpportunityMe';
 import CareerResources from './FirstFourDiv_AfterNavbar/CareerResources';
 import Dashboard from './pages/Dashboard';
-import ViewDetails from './pages/ViewDetails'; // <-- Added import
+import ViewDetails from './pages/ViewDetails'; 
 import './index.css';
 
 import EventsSection from './components/EventsSection';

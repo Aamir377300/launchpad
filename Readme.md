@@ -1,7 +1,18 @@
-# 🚀 Launchpad
+# Launchpad
 
-A full-stack web application for student onboarding, authentication, and test management built with **React + Vite** (frontend) and **Express + MongoDB** (backend).
+LaunchPad is a simple, easy-to-use platform that brings students, startups, and professionals together in one place. It’s more than just a website, it’s a growing community where people can find opportunities, learn new skills, and grow in their careers.
 
+With LaunchPad, you can easily:
+	• Explore internships, jobs, and real-world projects that match your skills and interests.
+	• Join hackathons, workshops, and networking events to learn, connect, and build experience.
+	• Access career guides and learning resources to help you stay ahead.
+	• Create your professional profile and connect directly with startups and teams looking for talent.
+
+Whether you’re a student starting out, a startup searching for talent, or a professional looking to share knowledge, LaunchPad gives you the space to grow and collaborate.
+
+At its core, LaunchPad aims to make career discovery and growth simple, accessible, and inspiring — all from one platform.
+
+---
 🌐 **Live Deployment:**  
 [Launchpad on Vercel](https://launchpadsfinal.vercel.app/mainpage)
 
@@ -28,97 +39,88 @@ project/
 
 ---
 
-## 🔧 Full Setup Guide
+## ⚙️ Setup Guide
 
-### ✅ Backend Setup
+##### First fork the repo
 
-1. **Go to the backend folder**  
-   ```bash
-   cd backend
-   ```
+```bash
+git clone <your-github-repo-link>
+cd Launchpad
+```
 
-2. **Initialize Node.js project (if not already initialized)**  
-   ```bash
-   npm init -y
-   ```
+### Setup for Backend
 
-3. **Install backend dependencies**  
-   ```bash
-   npm install bcryptjs cors dotenv express jsonwebtoken mongoose
-   ```
+```env
+cd backend
+npm install
+```
 
-4. **Setup `.env` file**  
-   Create a `.env` file inside `/backend`:
-   ```
-   MONGO_URI=your mongodb string
-   JWT_SECRET=mystrongsecretkey123
-   PORT=5002
+#### setup for the backend environment Variable
 
-   SMTP_EMAIL=abc724805@gmail.com
-   SMTP_PASS=pquy ooaz xwth oqtx
-   ```
+```env
+cp .env.example .env
+```
 
-5. **Update package.json scripts**  
-   In `backend/package.json`, set:
-   ```json
-   "scripts": {
-     "start": "nodemon server.js"
-   }
-   ```
+This is created a .env in the root folder of the backend which is contains this
 
-6. **Start the backend server**
-   ```bash
-   npm start
-   ```
+```env
+# MongoDB Database Configuration
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.xxxxxx.mongodb.net/<databaseName>?retryWrites=true&w=majority
 
----
+# JWT Configuration
+JWT_SECRET=your_jwt_secret_key_here
+PORT=5002
 
-### ✅ Frontend Setup
+# Email (SMTP) Configuration
+SMTP_EMAIL=your_email_here@gmail.com
+SMTP_PASS=your_app_password_here
 
-1. **Open a new terminal & go to the frontend folder**  
-   ```bash
-   cd frontend
-   ```
+```
 
-2. **Initialize frontend project (if not already initialized)**  
-   ```bash
-   npm init -y
-   ```
+##### Run the Backend
 
-3. **Install frontend dependencies**  
-   ```bash
-   npm install react react-dom react-icons react-router-dom axios
-   ```
-
-4. **Install Vite & ESLint as dev dependencies**  
-   ```bash
-   npm install --save-dev eslint @vitejs/plugin-react vite
-   ```
-
-5. **Install everything again (for safety)**  
-   ```bash
-   npm install
-   ```
-
-6. **Update package.json scripts**
-   In `frontend/package.json`, set:
-   ```json
-   "scripts": {
-     "dev": "vite"
-   }
-   ```
-
-7. **Run the frontend dev server**  
-   ```bash
-   npm run dev
-   ```
+```bash
+npm run dev
+```
 
 ---
 
-🔴 .env file **Run the frontend dev server**  
-   ```bash
-   VITE_API_URL = https://launchpad-2.onrender.com
-   ```
+### Setup for Frontend
+
+Go to the frontend directory
+
+```bash
+cd frontend
+
+npm install
+```
+
+#### setup for the frontend environment Variable
+
+```bash
+cp .env.example .env
+```
+
+##### This is created a .env inside the root folder of the frontend
+
+```env
+VITE_API_URL = https://launchpad-2.onrender.com
+```
+
+##### Run the frontend
+
+```bash
+npm run dev
+```
+
+#### Note
+
+```bash
+For best results and to avoid CORS issues, make sure your servers run on the following URLs:
+
+Frontend → http://localhost:5173  
+Backend  → http://localhost:5002
+```
 
 ---
 
