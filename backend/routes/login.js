@@ -25,10 +25,11 @@ router.post('/login', async(req, res) => {
         }
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-            expiresIn: "1h"
+            expiresIn: "7d"
         })
 
         return res.json({ token })
+        console.log(user)
     }
     catch (err) {
         console.log("Login error:", err)
@@ -45,6 +46,7 @@ router.get('/me', verifyToken, async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
         res.json(user);
+        console.log(user)
     } catch (err) {
         res.status(500).json({ error: 'Server error' });
     }

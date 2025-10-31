@@ -7,19 +7,16 @@ const userSchema = new mongoose.Schema({
   password: String,
   phone: String,
   avatar: {
-    type: String,
-    default: "https://randomuser.me/api/portraits/lego/1.jpg",
+    url: { type: String, default: "" },
+    public_id: { type: String, default: "" }
   },
   github: String,
   linkedin: String,
   bio: String,
-  certificates: [
-    {
-      name: String,
-      url: String
-    }
-  ],
-  resume: String,
+  resume: {
+    url: String,
+    public_id: String,
+  },
   motivation: String,
   skills: [String],
   careerGoals: String,

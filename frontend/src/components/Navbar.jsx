@@ -79,9 +79,9 @@ const Navbar = ({ toggleSidebar }) => {
             <button className="avatar-btn" onClick={handleAvatarClick}>
               <img
                 src={
-                  user?.avatar ||
+                  user?.avatar?.url ||
                   "https://randomuser.me/api/portraits/lego/1.jpg"
-                }
+                }                
                 alt="profile"
                 className="avatar-img"
               />
@@ -93,9 +93,10 @@ const Navbar = ({ toggleSidebar }) => {
                 <div className="dropdown-profile">
                   <img
                     src={
-                      user?.avatar ||
+                      user?.avatar?.url ||
                       "https://randomuser.me/api/portraits/lego/1.jpg"
                     }
+                    
                     alt="profile"
                     className="dropdown-avatar"
                   />

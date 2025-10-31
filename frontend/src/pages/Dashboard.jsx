@@ -1,8 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { FaGithub, FaLinkedin, FaPlus } from "react-icons/fa";
+import {
+  FaGithub,
+  FaLinkedin,
+  FaPlus,
+  FaCamera,
+  FaTimes,
+  FaMinus,
+} from "react-icons/fa";
 import { MapPin } from "lucide-react";
-import "./Dashboard.css";
+import AvatarEditor from "react-avatar-editor";
 import Navbar from "../components/Navbar";
+import AvatarCropper from "../Avatar_Crop/AvatarCropper";
+
+import "./Dashboard.css";
+
+// Update your API URL setup as needed
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const SKILL_OPTIONS = [
@@ -19,6 +31,132 @@ const SKILL_OPTIONS = [
   "SQL",
 ];
 
+// Avatar Cropper Modal Component -- Can be moved to its own file!
+// function AvatarCropper({ onSave, onCancel, initialImage }) {
+//   const editorRef = React.useRef(null);
+//   const [image, setImage] = useState(initialImage || null);
+//   const [scale, setScale] = useState(1.2);
+//   const [rotate, setRotate] = useState(0);
+
+//   const handleFileChange = (e) => {
+//     const file = e.target.files[0];
+//     if (file) setImage(file);
+//   };
+
+//   const handleSave = () => {
+//     if (editorRef.current) {
+//       const canvas = editorRef.current.getImageScaledToCanvas();
+//       canvas.toBlob((blob) => {
+//         if (blob) {
+//           const croppedFile = new File([blob], "avatar.png", {
+//             type: "image/png",
+//           });
+//           onSave(croppedFile);
+//         }
+//       });
+//     }
+//   };
+
+//   return (
+//     <div className="avatar-cropper-overlay">
+//       <div className="avatar-cropper-modal">
+//         <div className="avatar-cropper-header">
+//           <h3>Edit Profile Picture</h3>
+//           <button onClick={onCancel} className="close-btn">
+//             <FaTimes />
+//           </button>
+//         </div>
+//         <div className="avatar-cropper-body">
+//           {!image ? (
+//             <div className="upload-prompt">
+//               <input
+//                 type="file"
+//                 accept="image/*"
+//                 onChange={handleFileChange}
+//                 id="avatar-upload"
+//                 style={{ display: "none" }}
+//               />
+//               <label htmlFor="avatar-upload" className="upload-label">
+//                 <FaPlus size={36} />
+//                 <p>Click to select an image</p>
+//               </label>
+//             </div>
+//           ) : (
+//             <>
+//               <div className="editor-container">
+//                 <AvatarEditor
+//                   ref={editorRef}
+//                   image={image}
+//                   width={250}
+//                   height={250}
+//                   border={50}
+//                   borderRadius={125}
+//                   color={[255, 255, 255, 0.7]}
+//                   scale={scale}
+//                   rotate={rotate}
+//                 />
+//               </div>
+//               <div className="controls">
+//                 <div className="control-group">
+//                   <label>Zoom</label>
+//                   <div className="slider-container">
+//                     <button onClick={() => setScale(Math.max(1, scale - 0.1))}>
+//                       <FaMinus />
+//                     </button>
+//                     <input
+//                       type="range"
+//                       min="1"
+//                       max="3"
+//                       step="0.01"
+//                       value={scale}
+//                       onChange={(e) => setScale(parseFloat(e.target.value))}
+//                     />
+//                     <button onClick={() => setScale(Math.min(3, scale + 0.1))}>
+//                       <FaPlus />
+//                     </button>
+//                   </div>
+//                 </div>
+//                 <div className="control-group">
+//                   <label>Rotate</label>
+//                   <input
+//                     type="range"
+//                     min="0"
+//                     max="360"
+//                     step="1"
+//                     value={rotate}
+//                     onChange={(e) => setRotate(parseInt(e.target.value))}
+//                   />
+//                   <span>{rotate}°</span>
+//                 </div>
+//                 <div className="change-image">
+//                   <input
+//                     type="file"
+//                     accept="image/*"
+//                     onChange={handleFileChange}
+//                     id="change-avatar"
+//                     style={{ display: "none" }}
+//                   />
+//                   <label htmlFor="change-avatar" className="change-image-btn">
+//                     Change Image
+//                   </label>
+//                 </div>
+//               </div>
+//             </>
+//           )}
+//         </div>
+//         <div className="avatar-cropper-footer">
+//           <button onClick={onCancel} className="cancel-btn">
+//             Cancel
+//           </button>
+//           <button onClick={handleSave} className="save-btn" disabled={!image}>
+//             Save
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
 export default function Dashboard() {
   const [profile, setProfile] = useState(null);
   const [edit, setEdit] = useState(false);
@@ -33,11 +171,13 @@ export default function Dashboard() {
     favoriteProject: "",
   });
 
-  // Certificate and Resume state
-  const [showCertForm, setShowCertForm] = useState(false);
-  const [certForm, setCertForm] = useState({ name: "", url: "" });
+  // Resume states
   const [showResumeForm, setShowResumeForm] = useState(false);
-  const [resumeUrl, setResumeUrl] = useState("");
+  const [resumeFile, setResumeFile] = useState(null);
+
+  // Avatar cropper modal states
+  const [showAvatarCropper, setShowAvatarCropper] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -74,6 +214,7 @@ export default function Dashboard() {
       });
   }, []);
 
+  // Form Editing Handlers
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -95,64 +236,87 @@ export default function Dashboard() {
     setLoading(false);
   };
 
-  // Add certificate (name + url)
-  const handleAddCertUrl = async () => {
-    if (!certForm.name.trim() || !certForm.url.trim()) return;
+  // Resume Upload Handler
+  const handleSetResumeFile = async (e) => {
+    e.preventDefault();
+    if (!resumeFile) {
+      alert("Please select a PDF file");
+      return;
+    }
+    if (resumeFile.type !== "application/pdf") {
+      alert("Please select a valid PDF file");
+      return;
+    }
+    setLoading(true);
     const token = localStorage.getItem("token");
-    await fetch(`${apiUrl}/api/profile/certificate-url`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ name: certForm.name.trim(), url: certForm.url.trim() }),
-    });
-    setProfile((prev) => ({
-      ...prev,
-      certificates: [...(prev.certificates || []), { name: certForm.name.trim(), url: certForm.url.trim() }],
-    }));
-    setCertForm({ name: "", url: "" });
-    setShowCertForm(false);
+    const formData = new FormData();
+    formData.append("file", resumeFile);
+
+    try {
+      await fetch(`${apiUrl}/api/profile/resume-file`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` }, // No content-type!
+        body: formData,
+      });
+      const res = await fetch(`${apiUrl}/api/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setProfile(await res.json());
+      setResumeFile(null);
+      setShowResumeForm(false);
+      alert("Resume uploaded/updated successfully!");
+    } catch (err) {
+      alert("Failed to upload/update resume");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Remove certificate (by url)
-  const handleRemoveCert = async (url) => {
+  const handleAvatarSave = async (croppedFile) => {
+    setUploadingAvatar(true);
     const token = localStorage.getItem("token");
-    await fetch(`${apiUrl}/api/profile/certificate-url`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ url }),
-    });
-    setProfile((prev) => ({
-      ...prev,
-      certificates: (prev.certificates || []).filter((c) => c.url !== url),
-    }));
+    const formData = new FormData();
+    formData.append("avatar", croppedFile);
+  
+    try {
+      const response = await fetch(`${apiUrl}/api/profile/avatar`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+  
+      // Read the body once and store it
+      const bodyText = await response.text();
+      let responseData;
+  
+      // Try to parse as JSON
+      try {
+        responseData = JSON.parse(bodyText);
+      } catch (parseErr) {
+        // If not JSON, use the raw text
+        console.warn("Response is not JSON:", bodyText);
+      }
+  
+      if (!response.ok) {
+        const errorMessage = responseData?.error || bodyText || "Unknown server error";
+        alert("Upload failed: " + errorMessage);
+        return;
+      }
+  
+      setProfile(responseData.user);
+      setShowAvatarCropper(false);
+      alert("Profile picture updated successfully!");
+    } catch (err) {
+      alert("Failed to upload profile picture: " + err.message);
+      console.error("Avatar upload exception:", err);
+    } finally {
+      setUploadingAvatar(false);
+    }
   };
+  
+  
 
-  // Set resume URL
-  const handleSetResumeUrl = async () => {
-    if (!resumeUrl.trim()) return;
-    const token = localStorage.getItem("token");
-    await fetch(`${apiUrl}/api/profile/resume-url`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ url: resumeUrl.trim() }),
-    });
-    setProfile((prev) => ({
-      ...prev,
-      resume: resumeUrl.trim(),
-    }));
-    setResumeUrl("");
-    setShowResumeForm(false);
-  };
-
-  // Onboarding form logic
+  // Onboarding Handlers
   const handleOnboardingChange = (e) =>
     setOnboardingForm({ ...onboardingForm, [e.target.name]: e.target.value });
 
@@ -192,13 +356,55 @@ export default function Dashboard() {
         {/* Left Box */}
         <div className="dashboard-left-box">
           <h1 className="dashboard-title">Profile Details</h1>
-          <img
-            src={
-              profile.avatar || "https://randomuser.me/api/portraits/lego/1.jpg"
-            }
-            alt="Avatar"
-            className="dashboard-avatar"
-          />
+          <div
+            className="avatar-container"
+            style={{
+              position: "relative",
+              display: "inline-block",
+              marginBottom: 20,
+            }}
+          >
+            <img
+              src={
+                profile.avatar?.url ||
+                "https://randomuser.me/api/portraits/lego/1.jpg"
+              }
+              alt="Avatar"
+              className="dashboard-avatar"
+              style={{
+                width: 150,
+                height: 150,
+                borderRadius: "50%",
+                objectFit: "cover",
+                border: "5px solid #e0eafc",
+                background: "#f8fafc",
+              }}
+            />
+            <button
+              className="avatar-edit-btn"
+              onClick={() => setShowAvatarCropper(true)}
+              type="button"
+              style={{
+                position: "absolute",
+                bottom: 8,
+                right: 8,
+                background: "#007bff",
+                border: "3px solid white",
+                borderRadius: "50%",
+                width: 40,
+                height: 40,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                color: "white",
+                transition: "all 0.3s ease",
+              }}
+            >
+              <FaCamera size={16} />
+            </button>
+          </div>
+
           <h2 className="dashboard-name">{profile.name}</h2>
           <p className="dashboard-email">{profile.email}</p>
           {profile.bio && (
@@ -262,7 +468,7 @@ export default function Dashboard() {
                 <textarea name="bio" value={form.bio} onChange={handleChange} />
               </label>
               <label>
-                GitHub   
+                GitHub
                 <input
                   className="input-box"
                   name="github"
@@ -300,18 +506,15 @@ export default function Dashboard() {
               </button>
             </form>
           ) : (
-            <>
-              <button
-                className="dashboard-edit-btn"
-                onClick={() => setEdit(true)}
-              >
-                Edit Profile
-              </button>
-            </>
+            <button
+              className="dashboard-edit-btn"
+              onClick={() => setEdit(true)}
+            >
+              Edit Profile
+            </button>
           )}
         </div>
-
-        {/* Right Box: Onboarding, Certificates, Resume */}
+        {/* Right Box: Onboarding, Resume Only */}
         <div className="dashboard-right-box">
           {onboarding ? (
             <form className="onboarding-form" onSubmit={handleOnboardingSubmit}>
@@ -330,7 +533,9 @@ export default function Dashboard() {
                   {SKILL_OPTIONS.map((skill) => (
                     <span
                       key={skill}
-                      className={`chip ${onboardingForm.skills.includes(skill) ? "selected" : ""}`}
+                      className={`chip ${
+                        onboardingForm.skills.includes(skill) ? "selected" : ""
+                      }`}
                       onClick={() => handleSkillToggle(skill)}
                     >
                       {skill}
@@ -392,204 +597,138 @@ export default function Dashboard() {
               </p>
             </div>
           )}
-
-          {/* Certificates Section */}
-          <div style={{ marginTop: "2rem" }}>
-            <h3>Certificates</h3>
-            {(profile.certificates && profile.certificates.length > 0) ? (
-              <div className="dashboard-certificates-list">
-                {profile.certificates.map((cert, idx) => (
-                  <div
-                    key={idx}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.7rem",
-                      marginBottom: "0.4rem",
-                      background: "#f8fafc",
-                      borderRadius: "8px",
-                      padding: "0.5rem 1rem",
-                    }}
-                  >
-                    <span style={{ fontWeight: 500 }}>{cert.name}</span>
-                    <a
-                      href={cert.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="dashboard-certificate-link"
-                      style={{ color: "#007bff" }}
-                    >
-                      View
-                    </a>
-                    <button
-                      onClick={() => handleRemoveCert(cert.url)}
-                      style={{
-                        color: "#d32f2f",
-                        border: "none",
-                        background: "none",
-                        cursor: "pointer",
-                        fontWeight: 500,
-                      }}
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div style={{ color: "#888", marginBottom: "0.7rem" }}>
-                No certificates added yet.
-              </div>
-            )}
-            {!showCertForm && (
-              <button
-                className="dashboard-add-btn"
-                onClick={() => setShowCertForm(true)}
-                style={{
-                  background: "#f8fafc",
-                  border: "1.5px solid #e0eafc",
-                  borderRadius: "8px",
-                  padding: "0.6rem 1.2rem",
-                  color: "#007bff",
-                  fontWeight: 700,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  marginTop: "0.7rem",
-                  cursor: "pointer",
-                }}
-              >
-                <FaPlus /> Add Certificate
-              </button>
-            )}
-            {showCertForm && (
-              <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.7rem" }}>
-                <input
-                  className="input-box"
-                  type="text"
-                  placeholder="Certificate Name"
-                  value={certForm.name}
-                  onChange={e => setCertForm({ ...certForm, name: e.target.value })}
-                  style={{ flex: 1, borderRadius: 6, border: "1.5px solid #e0eafc", padding: "0.5rem" }}
-                />
-                <input
-                  className="input-box"
-                  type="url"
-                  placeholder="Certificate URL"
-                  value={certForm.url}
-                  onChange={e => setCertForm({ ...certForm, url: e.target.value })}
-                  style={{ flex: 2, borderRadius: 6, border: "1.5px solid #e0eafc", padding: "0.5rem" }}
-                />
-                <button
-                  className="dashboard-save-btn"
-                  type="button"
-                  onClick={handleAddCertUrl}
-                  style={{ padding: "0.5rem 1.2rem" }}
-                >
-                  Add
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowCertForm(false);
-                    setCertForm({ name: "", url: "" });
-                  }}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: "#888",
-                    fontWeight: 500,
-                    cursor: "pointer",
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
-            )}
-          </div>
-
           {/* Resume Section */}
           <div style={{ marginTop: "2rem" }}>
             <h3>Resume</h3>
             {profile.resume ? (
-              <a
-                href={profile.resume}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="dashboard-resume-link"
-                style={{
-                  background: "#f8fafc",
-                  borderRadius: "8px",
-                  padding: "0.5rem 1rem",
-                  color: "#007bff",
-                  fontWeight: 500,
-                  display: "inline-block",
-                  marginBottom: "0.7rem",
-                }}
-              >
-                View Resume
-              </a>
-            ) : null}
-            {!profile.resume && !showResumeForm && (
-              <button
-                className="dashboard-add-btn"
-                onClick={() => setShowResumeForm(true)}
-                style={{
-                  background: "#f8fafc",
-                  border: "1.5px solid #e0eafc",
-                  borderRadius: "8px",
-                  padding: "0.6rem 1.2rem",
-                  color: "#007bff",
-                  fontWeight: 700,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  marginTop: "0.7rem",
-                  cursor: "pointer",
-                }}
-              >
-                <FaPlus /> Add Resume
-              </button>
-            )}
-            {showResumeForm && (
-              <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.7rem" }}>
-                <input
-                  className="input-box"
-                  type="url"
-                  placeholder="Resume URL"
-                  value={resumeUrl}
-                  onChange={e => setResumeUrl(e.target.value)}
-                  style={{ flex: 2, borderRadius: 6, border: "1.5px solid #e0eafc", padding: "0.5rem" }}
-                />
-                <button
-                  className="dashboard-save-btn"
-                  type="button"
-                  onClick={handleSetResumeUrl}
-                  style={{ padding: "0.5rem 1.2rem" }}
-                >
-                  Add
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowResumeForm(false);
-                    setResumeUrl("");
-                  }}
+              <>
+                <a
+                  href={profile.resume.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="dashboard-resume-link"
                   style={{
-                    background: "none",
-                    border: "none",
-                    color: "#888",
+                    background: "#f8fafc",
+                    borderRadius: "8px",
+                    padding: "0.5rem 1rem",
+                    color: "#007bff",
                     fontWeight: 500,
+                    display: "inline-block",
+                    marginBottom: "0.7rem",
+                  }}
+                >
+                  View Resume PDF
+                </a>
+                {!showResumeForm && (
+                  <button
+                    className="dashboard-add-btn"
+                    onClick={() => setShowResumeForm(true)}
+                    style={{
+                      background: "#f8fafc",
+                      border: "1.5px solid #e0eafc",
+                      borderRadius: "8px",
+                      padding: "0.6rem 1.2rem",
+                      color: "#007bff",
+                      fontWeight: 700,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.5rem",
+                      marginTop: "0.7rem",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <FaPlus /> Update Resume
+                  </button>
+                )}
+              </>
+            ) : (
+              !showResumeForm && (
+                <button
+                  className="dashboard-add-btn"
+                  onClick={() => setShowResumeForm(true)}
+                  style={{
+                    background: "#f8fafc",
+                    border: "1.5px solid #e0eafc",
+                    borderRadius: "8px",
+                    padding: "0.6rem 1.2rem",
+                    color: "#007bff",
+                    fontWeight: 700,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    marginTop: "0.7rem",
                     cursor: "pointer",
                   }}
                 >
-                  Cancel
+                  <FaPlus /> Add Resume
                 </button>
-              </div>
+              )
+            )}
+            {showResumeForm && (
+              <form
+                onSubmit={handleSetResumeFile}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.5rem",
+                  marginTop: "0.7rem",
+                }}
+              >
+                <input
+                  className="input-box"
+                  type="file"
+                  accept="application/pdf"
+                  style={{
+                    borderRadius: 6,
+                    border: "1.5px solid #e0eafc",
+                    padding: "0.5rem",
+                  }}
+                  onChange={(e) => setResumeFile(e.target.files[0])}
+                  required
+                />
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <button
+                    className="dashboard-save-btn"
+                    type="submit"
+                    style={{ padding: "0.5rem 1.2rem" }}
+                    disabled={loading}
+                  >
+                    {loading
+                      ? profile.resume
+                        ? "Updating..."
+                        : "Uploading..."
+                      : profile.resume
+                      ? "Update"
+                      : "Add"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowResumeForm(false);
+                      setResumeFile(null);
+                    }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#888",
+                      fontWeight: 500,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
             )}
           </div>
         </div>
       </div>
+      {showAvatarCropper && (
+        <AvatarCropper
+          onSave={handleAvatarSave}
+          onCancel={() => setShowAvatarCropper(false)}
+        />
+      )}
     </>
   );
 }

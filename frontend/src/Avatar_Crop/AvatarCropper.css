@@ -1,0 +1,169 @@
+.avatar-cropper-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.avatar-cropper-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  min-width: 340px;
+  min-height: 380px;
+  max-width: 94vw;
+}
+
+.avatar-cropper-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e0eafc;
+}
+
+.avatar-cropper-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: #666;
+}
+
+.avatar-cropper-body {
+  padding: 2rem;
+}
+
+.upload-prompt {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  color: #007bff;
+  padding: 2rem;
+  border: 2px dashed #e0eafc;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.upload-label:hover {
+  border-color: #007bff;
+  background: #f8fafc;
+}
+
+.editor-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control-group label {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.slider-container button {
+  background: #f8fafc;
+  border: 1px solid #e0eafc;
+  border-radius: 6px;
+  padding: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider-container input[type="range"] {
+  flex: 1;
+}
+
+.change-image {
+  margin-top: 1rem;
+}
+
+.change-image-btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background: #f8fafc;
+  border: 1.5px solid #e0eafc;
+  border-radius: 8px;
+  color: #007bff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.change-image-btn:hover {
+  background: #e0eafc;
+}
+
+.avatar-cropper-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 1px solid #e0eafc;
+}
+
+.cancel-btn,
+.save-btn {
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn {
+  background: #f8fafc;
+  border: 1.5px solid #e0eafc;
+  color: #666;
+}
+
+.save-btn {
+  background: #007bff;
+  border: none;
+  color: white;
+}
+
+.save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
